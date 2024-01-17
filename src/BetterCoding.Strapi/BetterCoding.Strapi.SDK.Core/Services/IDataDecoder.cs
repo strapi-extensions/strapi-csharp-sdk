@@ -10,13 +10,26 @@ namespace BetterCoding.Strapi.SDK.Core.Services
 
     public class DataDecoder : IDataDecoder
     {
-        public object Decode(object data, IServiceHub serviceHub) => data switch
+        public object Decode(object data, IServiceHub serviceHub)
         {
-            null => default,
-            IDictionary<string, object> { } dictionary => dictionary.ToDictionary(pair => pair.Key, pair => Decode(pair.Value, serviceHub)),
-            IList<object> { } list => list.Select(item => Decode(item, serviceHub)).ToList(),
-            _ => data
-        };
+            if (data == null)
+            {
+                return default;
+            }
+            else if (DateTime.TryParseExact(data.ToString(), DateFormatStrings, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            {
+                return parsed;
+            }
+            else if (data is IDictionary<string, object> { } dictionary)
+            {
+                return dictionary.ToDictionary(pair => pair.Key, pair => Decode(pair.Value, serviceHub));
+            }
+            else if (data is IList<object> { } list) 
+            {
+                return list.Select(item => Decode(item, serviceHub)).ToList();
+            }
+            return data;
+        }
 
         internal static string[] DateFormatStrings { get; } =
         {

@@ -11,7 +11,7 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
 
         public StrapiREST(IServiceHub serviceHub = default)
         {
-            Services = StrapiClient.Instance.Services;
+            Services = StrapiClient.GetClient().Services;
         }
 
         public async Task<StrapiEntry> Get(string entryName, int id)

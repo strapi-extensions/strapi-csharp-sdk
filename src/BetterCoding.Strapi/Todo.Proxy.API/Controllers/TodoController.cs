@@ -8,11 +8,6 @@ namespace Todo.Proxy.API.Controllers
     [Route("[controller]")]
     public class TodoController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<TodoController> _logger;
 
         public TodoController(ILogger<TodoController> logger)

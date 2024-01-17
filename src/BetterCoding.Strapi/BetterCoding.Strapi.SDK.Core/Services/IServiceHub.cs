@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Strapi
 
+using BetterCoding.Strapi.SDK.Core.Entry;
 using BetterCoding.Strapi.SDK.Core.Http;
 using BetterCoding.Strapi.SDK.Core.Webhook;
 
@@ -16,6 +17,8 @@ namespace BetterCoding.Strapi.SDK.Core.Services
         IJsonTool JsonTool { get; }
         IEntryStateCoder EntryStateCoder { get; }
         IEntryController EntryController { get; }
+        IAttributeEncoder AttributeEncoder { get; }
+        IStrapiEntryClassController ClassController { get; }
     }
 
     public class ServiceHub : IServiceHub
@@ -33,5 +36,7 @@ namespace BetterCoding.Strapi.SDK.Core.Services
         public IJsonTool JsonTool => new JsonTool();
         public IEntryStateCoder EntryStateCoder => new EntryStateCoder();
         public IEntryController EntryController => new EntryController();
+        public IAttributeEncoder AttributeEncoder => new AttributeEncoder();
+        public IStrapiEntryClassController ClassController => new StrapiEntryClassController();
     }
 }

@@ -1,4 +1,7 @@
 
+using BetterCoding.Strapi.SDK.Core;
+using Microsoft.Extensions.Configuration;
+
 namespace Todo.Proxy.API
 {
     public class Program
@@ -14,6 +17,12 @@ namespace Todo.Proxy.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Host.ConfigureServices((hostContext, services) =>
+            {
+                var serverConfiguration = builder.Configuration.GetSection("Strapi").Get<StrapiServerConfiguration>();
+                StrapiClient.AddServer(serverConfiguration);
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,7 +33,6 @@ namespace Todo.Proxy.API
             }
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
