@@ -49,7 +49,7 @@ var production = new StrapiServerConfiguration()
 {
     APIToken = "your api token for this server",
     ServerURI = "http://your-production-server.com",
-    Alias = "stage",
+    Alias = "production",
     IsDefault = false,
 };
 
