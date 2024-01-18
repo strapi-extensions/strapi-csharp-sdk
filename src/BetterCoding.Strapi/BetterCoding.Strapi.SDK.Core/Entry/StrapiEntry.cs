@@ -32,7 +32,7 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
             {
                 if (!CheckIsDataAvailable(key))
                 {
-                    throw new InvalidOperationException("ParseObject has no data for this key. Call FetchIfNeededAsync() to get the data.");
+                    throw new InvalidOperationException("StrapiEntry has no data for this key. Call FetchIfNeededAsync() to get the data.");
                 }
             }
         }
