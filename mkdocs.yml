@@ -1,0 +1,26 @@
+# Project information
+site_name: Strapi CSharp SDK
+site_url: https://www.hello-algo.com/
+site_author: Wu Jun
+site_description: Guide for Strapi CSharp SDK
+# Repository
+repo_name: strapi-csharp-sdk
+repo_url: https://github.com/strapi-extensions/strapi-csharp-sdk
+edit_uri: tree/main/docs
+
+# Copyright
+copyright: Copyright &copy; 2023 - 2024 Wu Jun
+
+# Configuration
+theme:
+  name: material
+  language: en
+extra:
+  alternate:
+    - name: English
+      link: /en/
+      lang: en
+  generator: false
+  status:
+    new: 最近添加
+
