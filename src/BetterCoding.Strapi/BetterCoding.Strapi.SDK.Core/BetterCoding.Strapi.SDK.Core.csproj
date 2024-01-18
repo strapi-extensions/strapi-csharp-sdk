@@ -17,9 +17,7 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 	<ItemGroup>
-		<Content Include="LICENSE" Pack="true" PackagePath="$(PackageLicenseFile)">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+		<None Include="LICENSE" Pack="true" PackagePath= "$(PackageLicenseFile)"/>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="BetterCoding.Patterns" Version="0.0.7" />
