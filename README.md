@@ -91,5 +91,6 @@ var todos = await StrapiClient.GetClient("stage")
 
  [license-svg]: https://img.shields.io/badge/license-BSD-lightgrey.svg
  [license-link]: https://github.com/strapi-extensions/strapi-csharp-sdk/blob/main/LICENSE
+ [nuget-svg]: https://img.shields.io/nuget/v/BetterCoding.Strapi.SDK.Core
  [nuget-link]: https://www.nuget.org/packages/BetterCoding.Strapi.SDK.Core
  [github-repo]: https://github.com/strapi-extensions/strapi-csharp-sdk 
