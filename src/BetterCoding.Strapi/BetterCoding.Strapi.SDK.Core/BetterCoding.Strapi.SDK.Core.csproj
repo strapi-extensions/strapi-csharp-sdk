@@ -11,14 +11,11 @@
 		<Description>Provides CSharp SD for Strapi CMS.</Description>
 		<Copyright>Better Coding@wujun4code</Copyright>
 		<PackageProjectUrl>https://github.com/strapi-extensions/strapi-csharp-sdk</PackageProjectUrl>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/strapi-extensions/strapi-csharp-sdk</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
-	<ItemGroup>
-		<None Include="LICENSE" Pack="true" PackagePath= "$(PackageLicenseFile)"/>
-	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="BetterCoding.Patterns" Version="0.0.7" />
 	</ItemGroup>
