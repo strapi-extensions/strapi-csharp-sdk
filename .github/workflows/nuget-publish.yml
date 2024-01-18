@@ -1,0 +1,27 @@
+name: publish to nuget
+on:
+  push:
+    branches:
+      - main # Default release branch
+env:
+  ## Sets environment variable
+  project: src/BetterCoding.Strapi/BetterCoding.Strapi.SDK.Core/BetterCoding.Strapi.SDK.Core.csproj
+  nuget_api_key: ${{secrets.NUGET_API_KEY}}
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:     
+      - uses: actions/checkout@v3
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+      - name: Install dependencies
+        run: dotnet restore $project
+      - name: Build
+        run: dotnet build $project --configuration Release --no-restore
+      - name: Test
+        run: dotnet test $project --no-restore --verbosity normal
+      - name: Pack
+        run: dotnet pack $project --no-build --configuration Release --output .
+      - name: PushNuget
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key $nuget_api_key --skip-duplicate

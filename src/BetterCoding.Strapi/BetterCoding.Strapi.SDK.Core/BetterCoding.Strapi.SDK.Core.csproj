@@ -1,13 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>10.0</LangVersion>
+		<PackageVersion>0.0.1</PackageVersion>
+		<Title>Strapi CSharp SDK</Title>
+		<Authors>Better Coding@wujun4code</Authors>
+		<Description>Provides CSharp SD for Strapi CMS.</Description>
+		<Copyright>Better Coding@wujun4code</Copyright>
+		<PackageProjectUrl>https://github.com/strapi-extensions/strapi-csharp-sdk</PackageProjectUrl>
+		<PackageLicenseExpression>BSD</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/strapi-extensions/strapi-csharp-sdk</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BetterCoding.Patterns" Version="0.0.7" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BetterCoding.Patterns" Version="0.0.7" />
+	</ItemGroup>
 
 </Project>
