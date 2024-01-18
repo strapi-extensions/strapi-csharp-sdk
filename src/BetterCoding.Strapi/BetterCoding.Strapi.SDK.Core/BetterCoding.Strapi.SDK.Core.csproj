@@ -16,13 +16,12 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
-
 	<ItemGroup>
-	  <None Include="..\..\..\LICENSE" Link="LICENSE" Pack="true" PackagePath="$(PackageLicenseFile)" />
+		<Content Include="LICENSE" Pack="true" PackagePath="$(PackageLicenseFile)">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="BetterCoding.Patterns" Version="0.0.7" />
 	</ItemGroup>
-
 </Project>
