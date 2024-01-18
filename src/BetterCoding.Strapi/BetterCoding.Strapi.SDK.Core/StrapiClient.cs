@@ -35,6 +35,12 @@ namespace BetterCoding.Strapi.SDK.Core
             return AddServers(new List<StrapiServerConfiguration> { serverConfigurations });
         }
 
+        public static StrapiClient AddServers(params StrapiServerConfiguration[] serverConfigurations)
+        {
+            if (!serverConfigurations.Any()) throw new ArgumentException("serverConfigurations can not be null or empty.");
+            return AddServers(serverConfigurations.ToList());
+        }
+
         public static StrapiClient AddServers(IEnumerable<StrapiServerConfiguration> serverConfigurations)
         {
             if (!serverConfigurations.Any()) throw new ArgumentException("serverConfigurations can not be null or empty.");
