@@ -15,7 +15,7 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
 
         public StrapiEntryClassController() => AddValid(typeof(StrapiEntry));
 
-        public string GetClassName(Type type) => type == typeof(StrapiEntry) ? ReservedStrapiEntryClassName : type.GetParseClassName();
+        public string GetClassName(Type type) => type == typeof(StrapiEntry) ? ReservedStrapiEntryClassName : type.GetStrapiEntryName();
 
         public Type GetType(string className)
         {
