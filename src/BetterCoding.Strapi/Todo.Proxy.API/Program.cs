@@ -1,6 +1,8 @@
 
 using BetterCoding.Strapi.SDK.Core;
+using BetterCoding.Strapi.SDK.Core.Server;
 using Microsoft.Extensions.Configuration;
+using Todo.Proxy.Repository;
 
 namespace Todo.Proxy.API
 {
@@ -21,6 +23,9 @@ namespace Todo.Proxy.API
             {
                 var serverConfiguration = builder.Configuration.GetSection("Strapi").Get<StrapiServerConfiguration>();
                 StrapiClient.AddServer(serverConfiguration);
+
+                services.AddTransient<ITodoEntryRepository, TodoEntryRepository>();
+                services.AddTransient<IAuthRepository, AuthRepository>();
             });
 
             var app = builder.Build();

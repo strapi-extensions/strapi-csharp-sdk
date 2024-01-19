@@ -8,10 +8,13 @@
 
 > dotnet add package BetterCoding.Strapi.SDK.Core 
 
+more installation details can be found [here][nuget-link].
+
 ## Usage
 
+> the following section shows how config your servers in your server side .NET project, something like ASP.NET Core Web API, it is not recommended to configure the api token directly on the client.
 
-### Config servers
+### Config servers - Server Side
 
 ```csharp
 var serverConfiguration = new StrapiServerConfiguration()
@@ -56,9 +59,19 @@ var production = new StrapiServerConfiguration()
 StrapiClient.AddServers(development, stage, production);
 ```
 
-
 ### Query
 
+Get entry by id
+
+```csharp
+var todo = await StrapiClient.GetClient()
+    .GetFiltersBuilder()
+    .EntryName("todo")
+    .PluralApiId("todos")
+    .GetAsync(1);
+```
+
+Filter entries 
 
 ```csharp
 var todos = await StrapiClient.GetClient()
@@ -78,6 +91,7 @@ return todos.Select(t => new TodoEntry
 }).ToList();
 ```
 
+
 if you are using multiple-servers mode, you can switch server when calling GetClient by passing the alias of server:
 
 ```csharp
@@ -87,6 +101,18 @@ var todos = await StrapiClient.GetClient("stage")
     .PluralApiId("todos")
     .DeepEqualsTo("whoCreated", "id", userId)
     .FindAsync();
+```
+
+### User
+
+Log in with local auth
+
+```csharp
+await StrapiClient.GetClient()
+    .GetAuthBuilder()
+    .Identifier("your-username")
+    .Password("your-password")
+    .LogInAsync();
 ```
 
  [license-svg]: https://img.shields.io/badge/license-BSD-lightgrey.svg

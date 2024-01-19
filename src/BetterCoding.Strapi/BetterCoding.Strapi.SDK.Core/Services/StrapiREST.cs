@@ -1,34 +1,32 @@
-﻿using BetterCoding.Strapi.SDK.Core.Http;
-using BetterCoding.Strapi.SDK.Core.Services;
+﻿using BetterCoding.Strapi.SDK.Core.Entry;
+using BetterCoding.Strapi.SDK.Core.Http;
 using BetterCoding.Strapi.SDK.Core.Utilities;
 
-namespace BetterCoding.Strapi.SDK.Core.Entry
+namespace BetterCoding.Strapi.SDK.Core.Services
 {
-    public class StrapiREST
+    public interface IStrapiREST
+    {
+        HttpRequest CreateRequest(
+           string relativeUri,
+           string method,
+           IDictionary<string, object> data = null);
+
+        Task<IDictionary<string, object>> ExecuteAsync(HttpRequest request);
+
+        Task<IDictionary<string, object>> ExecuteAsync(
+           string relativeUri,
+           string method,
+           IDictionary<string, object> data = null);
+    }
+
+    public class StrapiREST : IStrapiREST
     {
         public string APIPath = "api";
         public IServiceHub Services { get; internal set; }
 
         public StrapiREST(IServiceHub serviceHub = default)
         {
-            Services = StrapiClient.GetClient().Services;
-        }
-
-        public async Task<StrapiEntry> Get(string entryName, int id)
-        {
-            var serverState = await ExecuteAsync($"{APIPath}/{entryName}/{id}", "GET").OnSuccess(task =>
-            task.Result["data"] as IDictionary<string, object> is Dictionary<string, object> item && item != null ? Services.EntryStateCoder.Decode(item, Services.DataDecoder, Services) : null);
-            if (serverState == null) throw new EntryPointNotFoundException();
-            var entry = Services.EntryController.Create(entryName, serverState);
-            return entry;
-        }
-
-        public async Task<IEnumerable<StrapiEntry>> Filtering(string entryName, string pluralApiId, string filters)
-        {
-            var serverStates = await ExecuteAsync($"{APIPath}/{pluralApiId}?{filters}", "GET").OnSuccess(task =>
-            (from item in task.Result["data"] as IList<object> select Services.EntryStateCoder.Decode(item as IDictionary<string, object>, Services.DataDecoder, Services)));
-            var result = serverStates.Select(s => Services.EntryController.Create(entryName, s)).ToList();
-            return result;
+            Services = serviceHub;
         }
 
         public HttpRequest CreateRequest(
@@ -36,16 +34,17 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
             string method,
             IDictionary<string, object> data = null)
         {
+            var token = Services.Server.ActiveUser != null ? Services.Server.ActiveUser.Jwt : Services.Server.ServerConfiguration.APIToken;
             var presetHeaders = new Dictionary<string, string>
             {
-                { "Authorization", $"Bearer {Services.ServerConfiguration.APIToken}" }
+                { "Authorization", $"Bearer {token}" }
             };
 
             var request = new HttpRequest(relativeUri, method,
                data: data,
                headers: presetHeaders.ToList())
             {
-                Resource = Services.ServerConfiguration.ServerURI
+                Resource = Services.Server.ServerConfiguration.ServerURI
             };
 
             return request;

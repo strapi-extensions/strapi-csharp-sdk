@@ -1,4 +1,6 @@
 ﻿using BetterCoding.Strapi.SDK.Core.Services;
+using BetterCoding.Strapi.SDK.Core.User;
+using BetterCoding.Strapi.SDK.Core.Utilities;
 using System.Reflection;
 
 namespace BetterCoding.Strapi.SDK.Core.Entry
@@ -13,7 +15,11 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
 
         Dictionary<string, Action> RegisterActions { get; set; } = new Dictionary<string, Action> { };
 
-        public StrapiEntryClassController() => AddValid(typeof(StrapiEntry));
+        public StrapiEntryClassController() 
+        { 
+            AddValid(typeof(StrapiEntry));
+            AddIntrinsic();
+        }
 
         public string GetClassName(Type type) => type == typeof(StrapiEntry) ? ReservedStrapiEntryClassName : type.GetStrapiEntryName();
 
@@ -129,7 +135,7 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
         {
             if (!(SDKClassesAdded, SDKClassesAdded = true).SDKClassesAdded)
             {
-
+                AddValid(typeof(StrapiUser));
             }
         }
     }

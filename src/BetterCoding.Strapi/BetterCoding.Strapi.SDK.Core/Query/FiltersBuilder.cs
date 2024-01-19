@@ -1,5 +1,6 @@
 ﻿using BetterCoding.Strapi.SDK.Core.Entry;
 using BetterCoding.Strapi.SDK.Core.Services;
+using BetterCoding.Strapi.SDK.Core.Utilities;
 
 namespace BetterCoding.Strapi.SDK.Core.Query
 {
@@ -11,13 +12,12 @@ namespace BetterCoding.Strapi.SDK.Core.Query
         protected IDictionary<string, object> _filters;
         public IDictionary<string, object> Filters => _filters;
         protected FiltersBuilder Instance => this;
-
         public IServiceHub Services { get; internal set; }
 
-        public FiltersBuilder(IServiceHub serviceHub = default)
+        public FiltersBuilder(IServiceHub serviceHub)
         {
             _filters = new Dictionary<string, object>();
-            Services = StrapiClient.GetClient().Services;
+            Services = serviceHub;
         }
 
         public virtual FiltersBuilder EntryName(string entryName)
@@ -132,10 +132,19 @@ namespace BetterCoding.Strapi.SDK.Core.Query
         public virtual async Task<IEnumerable<StrapiEntry>> FindAsync()
         {
             var filters = Encode();
-
-            var result = await StrapiClient.GetClient().GetREST().Filtering(_entryName, _pluralApiId, filters);
-
+            var serverStates = await Services.StrapiREST.ExecuteAsync($"api/{_pluralApiId}?{filters}", "GET").OnSuccess(task =>
+            (from item in task.Result["data"] as IList<object> select Services.EntryStateCoder.Decode(item as IDictionary<string, object>, Services.DataDecoder, Services)));
+            var result = serverStates.Select(s => Services.EntryController.Create(_entryName, s)).ToList();
             return result;
+        }
+
+        public async Task<StrapiEntry> GetAsync(int id)
+        {
+            var serverState = await Services.StrapiREST.ExecuteAsync($"api/{_pluralApiId}/{id}", "GET").OnSuccess(task =>
+            task.Result["data"] as IDictionary<string, object> is Dictionary<string, object> item && item != null ? Services.EntryStateCoder.Decode(item, Services.DataDecoder, Services) : null);
+            if (serverState == null) throw new EntryPointNotFoundException();
+            var entry = Services.EntryController.Create(_entryName, serverState);
+            return entry;
         }
     }
 }
