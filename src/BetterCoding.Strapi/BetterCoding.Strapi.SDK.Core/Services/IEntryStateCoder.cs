@@ -9,7 +9,7 @@ namespace BetterCoding.Strapi.SDK.Core.Services
 
     public class EntryStateCoder : IEntryStateCoder
     {
-        public IEntryState Decode(IDictionary<string, object> data, IDataDecoder decoder, IServiceHub serviceHub)
+        public virtual IEntryState Decode(IDictionary<string, object> data, IDataDecoder decoder, IServiceHub serviceHub)
         {
             IDictionary<string, object> serverData = new Dictionary<string, object> { },
                 mutableData = new Dictionary<string, object>(data);
@@ -40,7 +40,7 @@ namespace BetterCoding.Strapi.SDK.Core.Services
             };
         }
 
-        T Extract<T>(IDictionary<string, object> data, string key, Func<object, T> action)
+       protected T Extract<T>(IDictionary<string, object> data, string key, Func<object, T> action)
         {
             T result = default;
 

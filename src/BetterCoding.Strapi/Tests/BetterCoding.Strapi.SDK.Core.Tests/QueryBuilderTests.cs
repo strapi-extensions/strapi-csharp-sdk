@@ -1,4 +1,5 @@
 using BetterCoding.Strapi.SDK.Core.Query;
+using BetterCoding.Strapi.SDK.Core.Server;
 using System.Text.Encodings.Web;
 using System.Web;
 
@@ -19,7 +20,7 @@ namespace BetterCoding.Strapi.SDK.Core.Tests
 
             StrapiClient.AddServer(serverConfiguration);
 
-            var actual = new StrapiClient().GetQueryBuilder().BuildFilters("$eq", 1, "whoCreated", "id").Encode();
+            var actual = new StrapiClient().GetFiltersBuilder().BuildFilters("$eq", 1, "whoCreated", "id").Encode();
 
             Assert.Equal("filters[whoCreated][id][$eq]=1", actual);
         }

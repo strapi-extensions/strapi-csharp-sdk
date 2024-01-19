@@ -1,6 +1,8 @@
 ﻿using BetterCoding.Strapi.SDK.Core.Entry.FieldOperations;
 using BetterCoding.Strapi.SDK.Core.Services;
+using BetterCoding.Strapi.SDK.Core.Services.Extensions;
 using BetterCoding.Strapi.SDK.Core.Utilities;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -9,8 +11,15 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
     public class StrapiEntry : IEnumerable<KeyValuePair<string, object>>
     {
         internal static string AutoClassName { get; } = "_Automatic";
-
-        public int Id => State.Id;
+        public int Id
+        {
+            get => State.Id;
+            set
+            {
+                IsDirty = true;
+                SetObjectIdInternal(value);
+            }
+        }
         public DateTime? CreatedAt => State.CreatedAt;
         public DateTime? UpdatedAt => State.UpdatedAt;
         public DateTime? PublishedAt => State.PublishedAt;
@@ -20,12 +29,31 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
         internal IEntryState State { get; private set; }
 
         internal object Mutex { get; } = new object { };
+        internal TaskQueue TaskQueue { get; } = new TaskQueue { };
+
+        protected T GetProperty<T>(T defaultValue, [CallerMemberName] string propertyName = null) => TryGetValue(Services.GetFieldForPropertyName(EntryName, propertyName), out T result) ? result : defaultValue;
+        protected void SetProperty<T>(T value, [CallerMemberName] string propertyName = null) => this[Services.GetFieldForPropertyName(EntryName, propertyName)] = value;
 
         public T Get<T>(string key) => Conversion.To<T>(this[key]);
+
         public StrapiEntry(string entryName, IServiceHub serviceHub = default)
         {
+            if (AutoClassName.Equals(entryName ?? throw new ArgumentException("You must specify a Parse class name when creating a new ParseObject.")))
+            {
+                entryName = GetType().GetStrapiEntryName();
+            }
             State = new MutableEntryState { EntryName = entryName };
+            OperationSetQueue.AddLast(new Dictionary<string, IStrapiFieldOperation>());
         }
+        void SetObjectIdInternal(int id)
+        {
+            lock (Mutex)
+            {
+                MutateState(mutableClone => mutableClone.Id = id);
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+        protected StrapiEntry(IServiceHub serviceHub = default) : this(AutoClassName, serviceHub) { }
         void CheckGetAccess(string key)
         {
             lock (Mutex)
@@ -98,6 +126,52 @@ namespace BetterCoding.Strapi.SDK.Core.Entry
                 PerformOperation(key, new StrapiSetOperation(value));
             }
         }
+
+        internal IDictionary<string, IStrapiFieldOperation> StartSave()
+        {
+            lock (Mutex)
+            {
+                IDictionary<string, IStrapiFieldOperation> currentOperations = CurrentOperations;
+                OperationSetQueue.AddLast(new Dictionary<string, IStrapiFieldOperation>());
+                OnPropertyChanged(nameof(IsDirty));
+                return currentOperations;
+            }
+        }
+        //protected virtual Task SaveAsync(Task toAwait, CancellationToken cancellationToken)
+        //{
+        //    IDictionary<string, IStrapiFieldOperation> currentOperations = null;
+
+        //    if (!IsDirty)
+        //    {
+        //        return Task.CompletedTask;
+        //    }
+
+        //    Task deepSaveTask;
+        //    string sessionToken;
+
+        //    lock (Mutex)
+        //    {
+        //        // Get the JSON representation of the object.
+
+        //        currentOperations = StartSave();
+        //        sessionToken = Services.GetCurrentSessionToken();
+        //        deepSaveTask = Services.DeepSaveAsync(EstimatedData, sessionToken, cancellationToken);
+        //    }
+
+        //    return deepSaveTask.OnSuccess(_ => toAwait).Unwrap().OnSuccess(_ => Services.ObjectController.SaveAsync(State, currentOperations, sessionToken, Services, cancellationToken)).Unwrap().ContinueWith(task =>
+        //    {
+        //        if (task.IsFaulted || task.IsCanceled)
+        //        {
+        //            HandleFailedSave(currentOperations);
+        //        }
+        //        else
+        //        {
+        //            HandleSave(task.Result);
+        //        }
+
+        //        return task;
+        //    }).Unwrap();
+        //}
         LinkedList<IDictionary<string, IStrapiFieldOperation>> OperationSetQueue { get; } = new LinkedList<IDictionary<string, IStrapiFieldOperation>>();
         public IDictionary<string, IStrapiFieldOperation> CurrentOperations
         {

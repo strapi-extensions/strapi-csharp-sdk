@@ -3,12 +3,18 @@ using Todo.Proxy.Contracts;
 
 namespace Todo.Proxy.Repository
 {
-    public class TodoEntryRepository
+    public interface ITodoEntryRepository
+    {
+        Task<List<TodoEntry>> GetByWhoCreated(int userId);
+        Task<TodoEntry> GetById(int id);
+    }
+
+    public class TodoEntryRepository: ITodoEntryRepository
     {
         public async Task<List<TodoEntry>> GetByWhoCreated(int userId)
         {
             var todos = await StrapiClient.GetClient()
-                .GetQueryBuilder()
+                .GetFiltersBuilder()
                 .EntryName("todo")
                 .PluralApiId("todos")
                 .DeepEqualsTo("whoCreated", "id", userId)
@@ -21,6 +27,23 @@ namespace Todo.Proxy.Repository
                 Title = t.Get<string>("title"),
                 Completed = t.Get<bool>("completed"),
             }).ToList();
+        }
+
+        public async Task<TodoEntry> GetById(int id)
+        {
+            var todo = await StrapiClient.GetClient()
+                .GetFiltersBuilder()
+                .EntryName("todo")
+                .PluralApiId("todos")
+                .GetAsync(1);
+
+            return new TodoEntry
+            {
+                Id = todo.Id,
+                Due = todo.Get<DateTime>("due"),
+                Title = todo.Get<string>("title"),
+                Completed = todo.Get<bool>("completed"),
+            };
         }
     }
 }

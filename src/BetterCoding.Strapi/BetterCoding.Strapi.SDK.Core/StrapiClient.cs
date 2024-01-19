@@ -1,36 +1,25 @@
-﻿using BetterCoding.Strapi.SDK.Core.Entry;
-using BetterCoding.Strapi.SDK.Core.Query;
+﻿using BetterCoding.Strapi.SDK.Core.Query;
+using BetterCoding.Strapi.SDK.Core.Server;
 using BetterCoding.Strapi.SDK.Core.Services;
+using BetterCoding.Strapi.SDK.Core.User;
 
 namespace BetterCoding.Strapi.SDK.Core
 {
-    public class StrapiServerConfiguration
-    {
-        public string ServerURI { get; set; } = string.Empty;
-        public string APIToken { get; set; } = string.Empty;
-
-        /// <summary>
-        /// key to map server
-        /// </summary>
-        public string Alias { get; set; } = string.Empty;
-        public bool IsDefault { get; set; } = false;
-    }
-
     public class StrapiClient
     {
-        public StrapiServerConfiguration ServerConfiguration { get; set; }
         public IServiceHub Services { get; internal set; }
 
         public StrapiClient(StrapiServerConfiguration configuration = default, IServiceHub serviceHub = default)
         {
-            ServerConfiguration = configuration is null ? new StrapiServerConfiguration() : configuration;
-            Services = serviceHub is null ? new ServiceHub(configuration) : serviceHub;
+            var server = new StrapiServer(configuration);
+            Services = serviceHub is null ? new ServiceHub(server) : serviceHub;
         }
 
         private static IDictionary<string, StrapiServerConfiguration> _servers = new Dictionary<string, StrapiServerConfiguration>();
+
         private static string _currentAlias = string.Empty;
 
-        public static StrapiClient AddServer(StrapiServerConfiguration serverConfigurations) 
+        public static StrapiClient AddServer(StrapiServerConfiguration serverConfigurations)
         {
             return AddServers(new List<StrapiServerConfiguration> { serverConfigurations });
         }
@@ -86,14 +75,19 @@ namespace BetterCoding.Strapi.SDK.Core
             throw new KeyNotFoundException($"no alias found alias name is {alias}");
         }
 
-        public FiltersBuilder GetQueryBuilder()
+        public FiltersBuilder GetFiltersBuilder()
         {
             return new FiltersBuilder(Services);
         }
 
-        public StrapiREST GetREST()
+        public AuthBuilder GetAuthBuilder()
         {
-            return new StrapiREST(Services);
+            return new AuthBuilder(Services);
+        }
+
+        public IStrapiREST GetREST()
+        {
+            return Services.StrapiREST;
         }
     }
 }
