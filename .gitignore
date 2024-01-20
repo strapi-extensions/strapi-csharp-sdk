@@ -512,3 +512,4 @@ exports
 dist
 build
 .strapi-updater.json
+site

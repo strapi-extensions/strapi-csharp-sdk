@@ -1,17 +1,9 @@
-# Welcome to MkDocs
+# What's Strapi?
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+[Strapi](https://strapi.io/) is a headless cms platform, it provides huge of features to build web/app.
 
-## Commands
+## How Strapi can Accelerate your development progress?
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+ 1. Set Strapi a back office cms platform role in your bussiness workflow, then we can call Strapi REST API to do CRUD.
+ 2. Strapi can play a back-end API server to host data transfering from client(iOS/Andorid/Web).
 
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
