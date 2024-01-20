@@ -3,6 +3,9 @@
 [![Nuget][nuget-svg]][nuget-link]
 [![License][license-svg]][license-link]
 
+## Documenations
+For more details please go to
+> https://strapi-extensions.github.io/strapi-csharp-sdk/
 
 ## Installation
 
