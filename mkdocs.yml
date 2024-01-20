@@ -1,13 +1,13 @@
 # Project information
-site_name: Strapi CSharp SDK
-site_url: https://www.hello-algo.com/
+site_name: Strapi CSharp SDK Guide
+site_url: https://github.com/strapi-extensions/strapi-csharp-sdk
 site_author: Wu Jun
 site_description: Guide for Strapi CSharp SDK
 # Repository
 repo_name: strapi-csharp-sdk
 repo_url: https://github.com/strapi-extensions/strapi-csharp-sdk
 edit_uri: tree/main/docs
-
+dev_addr: "0.0.0.0:8001"
 # Copyright
 copyright: Copyright &copy; 2023 - 2024 Wu Jun
 
@@ -15,6 +15,16 @@ copyright: Copyright &copy; 2023 - 2024 Wu Jun
 theme:
   name: material
   language: en
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
 extra:
   alternate:
     - name: English
@@ -23,4 +33,16 @@ extra:
   generator: false
   status:
     new: 最近添加
+
+nav:
+  - Getting started: 
+    - index.md
+  - Installation: 
+    - installation/index.md
+    - Configuration: installation/configuration.md
+  - Query: 
+    - query/get-by-id.md    
+    - query/filters.md
+  - User:
+    - user/log-in.md 
 
