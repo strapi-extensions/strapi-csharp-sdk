@@ -29,5 +29,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ${{env.REGISTRY_HOST}}/${{ secrets.REGISTRY_USERNAME }}/strapi-sample-app:${{ github.sha }}
+        tags: ${{vars.REGISTRY_HOST}}/${{ secrets.REGISTRY_USERNAME }}/strapi-sample-app:${{ github.sha }}
         file: ./develop/app/Dockerfile
