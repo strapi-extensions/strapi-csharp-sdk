@@ -15,4 +15,5 @@ export default ({ env }) => {
             },
         };
     }
+    else return {};
 };
